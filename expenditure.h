@@ -3,6 +3,7 @@
 #include <chrono>
 #include <stdexcept>
 #include <sstream>
+#include <iostream>
 
 class Expenditure{
     private:
@@ -65,4 +66,6 @@ class Expenditure{
         double getAmount() const;
         const std::string &getType() const;
         const std::string &getDate() const;
+        
+        void show() const;
 };

@@ -36,7 +36,7 @@ std::string Expenditure::nowDate(){
     auto now = std::chrono::system_clock::now(); 
     std::time_t t = std::chrono::system_clock::to_time_t(now);
     std::tm tm{};
-    localtime_r(&t, &tm); // or localtime_s on Windows
+    localtime_s(&tm, &t); // or localtime_s on Windows
     char date[11];
     std::strftime(date, sizeof(date), "%d/%m/%Y", &tm);
     return std::string(date);
@@ -74,4 +74,6 @@ double Expenditure::getAmount() const{return amount;}
 const std::string & Expenditure::getType() const{return type;}
 const std::string & Expenditure::getDate() const{return date;}
 
-
+void Expenditure::show() const{
+    std::cout << "Name: " << name << "| Amount: " << amount << "| Type: " << type << "| Date: " << date << std::endl;
+}
