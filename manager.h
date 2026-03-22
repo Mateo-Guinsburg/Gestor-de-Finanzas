@@ -6,7 +6,10 @@ class Manager {
 private:
     std::vector<Expenditure> list;
 public:
-    void addExpenditure(Expenditure e);
+    void addExpenditure(const Expenditure &e);
+    void removeExpenditure(size_t index);
     void showAll() const;
-    double getTotal() const;
+    double getTotalAmount() const;
+    void filterByType(const std::string &type);
+    void filterByDateRange(const std::string &start, const std::string &end);
 };

@@ -1,4 +1,5 @@
 #include "expenditure.h"
+#include <iomanip>
 
 bool Expenditure::validate_amount(double amt){
     if(amt < 0){
@@ -36,7 +37,8 @@ std::string Expenditure::nowDate(){
     auto now = std::chrono::system_clock::now(); 
     std::time_t t = std::chrono::system_clock::to_time_t(now);
     std::tm tm{};
-    localtime_s(&tm, &t); // or localtime_s on Windows
+    localtime_r(&t, &tm); 
+    //localtime_s(&tm, &t); //on Windows
     char date[11];
     std::strftime(date, sizeof(date), "%d/%m/%Y", &tm);
     return std::string(date);
@@ -75,5 +77,7 @@ const std::string & Expenditure::getType() const{return type;}
 const std::string & Expenditure::getDate() const{return date;}
 
 void Expenditure::show() const{
-    std::cout << "Name: " << name << "| Amount: " << amount << "| Type: " << type << "| Date: " << date << std::endl;
+    std::ostringstream oss;
+    oss << std::fixed << std::setprecision(2) << amount;
+    std::cout << name << " | $" << oss.str() << " | " << type << " | " << date << std::endl;
 }
