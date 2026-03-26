@@ -1,3 +1,6 @@
+#ifndef EXPENDITURE_H
+#define EXPENDITURE_H
+
 #include <string>
 #include <ctime>
 #include <chrono>
@@ -48,14 +51,7 @@ class Expenditure{
             };
         } 
         //default constructor
-        Expenditure(const std::string &name, const std::string &type):name(name), amount(0), type(type), date(nowDate()){
-            if (!validate_name(name)) {
-                throw std::invalid_argument("Invalid name: cannot be empty.");
-            }
-            if (!validate_type(type)) {
-                throw std::invalid_argument("Invalid type: cannot be empty.");
-            }
-        }
+        Expenditure():amount(0), date(nowDate()){}
 
         void setName(const std::string &name);
         void setAmount(double amt);
@@ -69,3 +65,5 @@ class Expenditure{
         
         void show() const;
 };
+
+#endif
