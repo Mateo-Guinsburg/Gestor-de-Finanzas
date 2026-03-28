@@ -14,7 +14,7 @@ static std::tuple<int,int,int> parseDate(const std::string &date) {
     return {year, month, day};
 }
 
-Expenditure Manager::getExpenditure(size_t index){
+const Expenditure & Manager::getExpenditure(size_t index){
     return list[index];
 }
 
@@ -43,6 +43,23 @@ void Manager::editExpenditure(size_t index, const std::string& newName, double n
         list[index] = original;
         throw;
     }
+}
+
+void Manager::updateAmount(size_t index, double newAmount){
+    if (index >= list.size()) throw std::invalid_argument("Invalid index: out of range.");
+    list[index].setAmount(newAmount); 
+}
+void Manager::updateName(size_t index, const std::string& newName){
+    if (index >= list.size()) throw std::invalid_argument("Invalid index: out of range.");
+    list[index].setName(newName); 
+}
+void Manager::updateType(size_t index, const std::string& newType){
+    if (index >= list.size()) throw std::invalid_argument("Invalid index: out of range.");
+    list[index].setType(newType); 
+}
+void Manager::updateDate(size_t index, const std::string& newDate){
+    if (index >= list.size()) throw std::invalid_argument("Invalid index: out of range.");
+    list[index].setDate(newDate); 
 }
 
 double Manager::getTotalAmount() const {
@@ -83,6 +100,10 @@ double Manager::getTotalByType(const std::string &type) const{
 // double Manager::getTotalByYear(int year) const{}
 
 void Manager::showAll(){
+    if (list.empty()) {
+        std::cout << "The list is empty." << std::endl;
+        return;
+    }
     sortExpenditures("date", true);
     for(size_t i = 0; i < list.size(); i++){
         std::cout << i + 1 << ". ";
@@ -119,7 +140,7 @@ void Manager::filterByDateRange(const std::string &start, const std::string &end
 
 void Manager::filterByAmount(double min, double max){
     if(min > max){
-        throw(std::invalid_argument("Invalid range: Minimum amount must be greater than maximum amount"));
+        throw(std::invalid_argument("Invalid range: Minimum amount must be less than maximum amount."));
     }
     sortExpenditures("amount", true);
     for(size_t i = 0; i < list.size(); i++){

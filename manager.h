@@ -9,10 +9,14 @@ class Manager {
 private:
     std::vector<Expenditure> list;
 public:
-    Expenditure getExpenditure(size_t index);
+    const Expenditure &getExpenditure(size_t index);
     void addExpenditure(const Expenditure &e);
     void removeExpenditure(size_t index);
     void editExpenditure(size_t index, const std::string& newName, double newAmount, const std::string& newType, const std::string& newDate);
+    void updateAmount(size_t index, double newAmount);
+    void updateName(size_t index, const std::string& newName);
+    void updateType(size_t index, const std::string& newType);
+    void updateDate(size_t index, const std::string& newDate);
     void sortExpenditures(const std::string& sortBy, bool ascending);    
     void showAll();
     double getTotalAmount() const;
