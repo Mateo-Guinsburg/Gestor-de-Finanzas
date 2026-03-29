@@ -3,6 +3,7 @@
 #include <sstream>
 #include <tuple>
 #include <algorithm>
+#include <fstream>
 
 static std::tuple<int,int,int> parseDate(const std::string &date) {
     std::istringstream iss(date);
@@ -15,6 +16,9 @@ static std::tuple<int,int,int> parseDate(const std::string &date) {
 }
 
 const Expenditure & Manager::getExpenditure(size_t index){
+    if(index >= list.size()){
+        throw(std::invalid_argument("Invalid index: out of range."));
+    }
     return list[index];
 }
 
@@ -96,15 +100,42 @@ double Manager::getTotalByType(const std::string &type) const{
     return total;
 }
 
-// double Manager::getTotalByMonth(int month) const{}
-// double Manager::getTotalByYear(int year) const{}
+double Manager::getTotalByMonth(int month, int year) const {
+    if (month < 1 || month > 12) {
+        throw std::invalid_argument("Invalid month: must be between 1 and 12.");
+    }
+    if (year < 0) {
+        throw std::invalid_argument("Invalid year: cannot be negative.");
+    }
+    double total = 0;
+    for (const auto& e : list) {
+        auto [y, m, d] = parseDate(e.getDate()); 
+        if (m == month && y == year) {
+            total += e.getAmount();
+        }
+    }
+    return total;
+}
+
+double Manager::getTotalByYear(int year) const {
+    if (year < 0) {
+        throw std::invalid_argument("Invalid year: cannot be negative.");
+    }
+    double total = 0;
+    for (const auto& e : list) {
+        auto [y, m, d] = parseDate(e.getDate());
+        if (y == year) {
+            total += e.getAmount();
+        }
+    }
+    return total;
+}
 
 void Manager::showAll(){
     if (list.empty()) {
         std::cout << "The list is empty." << std::endl;
         return;
     }
-    sortExpenditures("date", true);
     for(size_t i = 0; i < list.size(); i++){
         std::cout << i + 1 << ". ";
         list[i].show();
@@ -165,4 +196,46 @@ void Manager::sortExpenditures(const std::string& sortBy, bool ascending){
         return false; // Default: no sort if invalid sortBy
     };
     std::sort(list.begin(), list.end(), comparator);
+}
+
+void Manager::saveToFile(const std::string& filename) const {
+    std::ofstream file(filename);
+    if (!file.is_open()) {
+        std::cout << "Error: Could not open file to save data." << std::endl;
+        return;
+    }
+    for (size_t i = 0; i < list.size(); i++) {
+        file << list[i].getName() << "," 
+             << list[i].getAmount() << "," 
+             << list[i].getType() << "," 
+             << list[i].getDate() << "\n";
+    }
+    file.close();
+}
+
+void Manager::loadFromFile(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        return; 
+    }
+    std::string line;
+    while (std::getline(file, line)) {
+        std::istringstream iss(line);
+        std::string name, type, date, sAmount;
+        
+        if (std::getline(iss, name, ',') &&
+            std::getline(iss, sAmount, ',') &&
+            std::getline(iss, type, ',') &&
+            std::getline(iss, date)) {
+            
+            try {
+                double amount = std::stod(sAmount);
+                Expenditure e(name, amount, type, date);
+                list.push_back(e); 
+            } catch (...) {
+                std::cout << "Warning: Skipped a corrupted line in the data file." << std::endl;
+            }
+        }
+    }
+    file.close();
 }

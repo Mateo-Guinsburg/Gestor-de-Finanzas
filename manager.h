@@ -22,11 +22,13 @@ public:
     double getTotalAmount() const;
     double getTotalByDate(const std::string &start, const std::string &end) const;
     double getTotalByType(const std::string &type) const;
-    double getTotalByMonth(int month) const;
+    double getTotalByMonth(int month, int year) const;
     double getTotalByYear(int year) const;
     void filterByType(const std::string &type);
     void filterByDateRange(const std::string &start, const std::string &end);
     void filterByAmount(double min, double max);
+    void saveToFile(const std::string& filename) const;
+    void loadFromFile(const std::string& filename);
 };
 
 #endif
