@@ -4,6 +4,7 @@
 #include <tuple>
 #include <algorithm>
 #include <fstream>
+#include <iomanip>
 
 static std::tuple<int,int,int> parseDate(const std::string &date) {
     std::istringstream iss(date);
@@ -136,15 +137,27 @@ void Manager::showAll(){
         std::cout << "The list is empty." << std::endl;
         return;
     }
+    // Print header
+    std::cout << std::left << std::setw(3) << "#" 
+              << std::setw(20) << "Name" 
+              << std::setw(8) << "Amount" 
+              << std::setw(20) << "Type" 
+              << std::setw(12) << "Date" << std::endl;
+    std::cout << std::string(60, '-') << std::endl;  // Separator line
+    
     for(size_t i = 0; i < list.size(); i++){
-        std::cout << i + 1 << ". ";
-        list[i].show();
+        std::ostringstream oss;
+        oss << std::fixed << std::setprecision(2) << list[i].getAmount();
+        std::cout << std::left << std::setw(3) << (i + 1) 
+                  << std::setw(20) << list[i].getName() 
+                  << std::setw(8) << ("$" + oss.str()) 
+                  << std::setw(20) << list[i].getType() 
+                  << std::setw(12) << list[i].getDate() << std::endl;
     }
     std::cout << std::endl;
 }
 
 void Manager::filterByType(const std::string &type){
-    sortExpenditures("type", true);
     for(size_t i = 0; i < list.size(); i++){
         if(list[i].getType() == type){
             std::cout << i + 1 << ". ";
@@ -173,7 +186,6 @@ void Manager::filterByAmount(double min, double max){
     if(min > max){
         throw(std::invalid_argument("Invalid range: Minimum amount must be less than maximum amount."));
     }
-    sortExpenditures("amount", true);
     for(size_t i = 0; i < list.size(); i++){
         if(list[i].getAmount() >= min && list[i].getAmount() <= max){
             std::cout << i + 1 << ". ";

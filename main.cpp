@@ -379,7 +379,6 @@ void getTotalType(Manager &M){
     std::cout << "Enter type: ";
     std::getline(std::cin, type);
     std::cout << "\n===Total amount spent of type " << type << ": $" << M.getTotalByType(type) << "===\n";
-    M.filterByType(type);
 }
 
 void getTotalMonth(Manager &M) {
