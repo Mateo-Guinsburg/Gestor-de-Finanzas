@@ -24,6 +24,7 @@ If you have a C++ compiler (like `g++`) and `make` installed, just open your ter
 ```bash
 make
 ./exp
+```
 
 ## Recent Updates
 
