@@ -92,5 +92,8 @@ const std::string & Expenditure::getDate() const{return date;}
 void Expenditure::show() const{
     std::ostringstream oss;
     oss << std::fixed << std::setprecision(2) << amount;
-    std::cout << name << " | $" << oss.str() << " | " << type << " | " << date << std::endl;
+    std::cout << std::left << std::setw(20) << name 
+              << std::setw(8) << ("$" + oss.str()) 
+              << std::setw(20) << type 
+              << std::setw(12) << date << std::endl;
 }
