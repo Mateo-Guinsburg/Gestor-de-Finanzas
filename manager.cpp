@@ -251,3 +251,27 @@ void Manager::loadFromFile(const std::string& filename) {
     }
     file.close();
 }
+
+MonthlyStats Manager::getMonthlyStats(int month, int year) const {
+    MonthlyStats stats = {0.0, 0.0, 0.0, 0.0, ""};
+
+    for (size_t i = 0; i < list.size(); i++) {
+        auto date = parseDate(list[i].getDate());
+        if (std::get<1>(date) == month && std::get<0>(date) == year) {
+            stats.totalSpent += list[i].getAmount();
+            if (list[i].getAmount() > stats.maxExpense) {
+                stats.maxExpense = list[i].getAmount();
+                stats.maxExpenseName = list[i].getName();
+            }
+        }
+    }
+
+    int days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int max_days = days_in_month[month - 1];
+    if (month == 2 && ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)) {
+            max_days = 29;
+    }
+    stats.dailyAverage = stats.totalSpent / max_days;
+    stats.weeklyAverage = stats.totalSpent / 4.33; 
+    return stats;
+}

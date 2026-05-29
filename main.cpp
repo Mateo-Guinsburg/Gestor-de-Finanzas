@@ -20,6 +20,7 @@ void getTotalDateRange(Manager &M);
 void getTotalType(Manager &M);
 void getTotalMonth(Manager &M);
 void getTotalYear(Manager &M);
+void handleStatistics(Manager &M);
 
 
 int main(){
@@ -29,12 +30,6 @@ int main(){
 void menu(){
     Manager M;
     M.loadFromFile("data.csv");
-    // Expenditure a("Botines Adidas", 120.56, "Deporte", "29/3/2026");
-    // Expenditure b("Agua", 3.02, "Comida", "04/04/2025");
-    // Expenditure c("Hamburguesa", 10.04, "Comida");
-    // M.addExpenditure(a);
-    // M.addExpenditure(b);
-    // M.addExpenditure(c);
     size_t option, suboption;
     do{
         std::cout << "\n========== FINANCE MANAGER ==========" << std::endl;
@@ -43,6 +38,7 @@ void menu(){
         std::cout << "3. Get amounts" << std::endl;
         std::cout << "4. Filter expenditures" << std::endl;
         std::cout << "5. Show all expenditures" << std::endl;
+        std::cout << "6. Show statistics by month" << std::endl;
         std::cout << "0. Exit" << std::endl;
         std::cout << "Your selection: ";
         option = getOpt(option);
@@ -118,6 +114,10 @@ void menu(){
                 std::cout << std::endl;
                 M.showAll();
                 break;
+            }
+            case 6:{
+                std::cout << std::endl;
+                handleStatistics(M);
             }
         }
     }while(option != 0);
@@ -324,7 +324,7 @@ void filterDate(Manager &M){
     }
 }
 
-void filterAmount(Manager &M) {
+void filterAmount(Manager &M){
     double min, max;
     std::cout << "Enter minimum amount: ";
     if (!(std::cin >> min)) {
@@ -349,7 +349,7 @@ void filterAmount(Manager &M) {
     }
 }
 
-void filterType(Manager &M) {
+void filterType(Manager &M){
     std::string type;
     std::cout << "Enter type to filter by: ";
     std::getline(std::cin, type);
@@ -381,7 +381,7 @@ void getTotalType(Manager &M){
     std::cout << "\n===Total amount spent of type " << type << ": $" << M.getTotalByType(type) << "===\n";
 }
 
-void getTotalMonth(Manager &M) {
+void getTotalMonth(Manager &M){
     int month, year;
     std::cout << "Enter month (1-12): ";
     if (!(std::cin >> month)) {
@@ -405,7 +405,7 @@ void getTotalMonth(Manager &M) {
     }
 }
 
-void getTotalYear(Manager &M) {
+void getTotalYear(Manager &M){
     int year;
     std::cout << "Enter year (YYYY): ";
     if (!(std::cin >> year)) {
@@ -421,4 +421,38 @@ void getTotalYear(Manager &M) {
     } catch (const std::exception &e) {
         std::cout << e.what() << std::endl;
     }
+}
+
+void handleStatistics(Manager &M){
+    int month, year;
+    
+    std::cout << "Enter month (1-12): ";
+    if (!(std::cin >> month) || month < 1 || month > 12) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Invalid input. Please enter a valid month." << std::endl;
+        return;
+    }
+    
+    std::cout << "Enter year (YYYY): ";
+    if (!(std::cin >> year)) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Invalid input. Please enter a valid year." << std::endl;
+        return;
+    }
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    MonthlyStats stats = M.getMonthlyStats(month, year);
+
+    std::cout << "\n=== STATISTICS FOR " << std::right << std::setfill('0') << std::setw(2) << month << "/" << year << " ===\n";
+    std::cout << std::setfill(' ');
+    std::cout << std::left << std::setw(25) << "Total spent:" << "$" << std::fixed << std::setprecision(2) << stats.totalSpent << "\n";
+    std::cout << std::left << std::setw(25) << "Daily average:" << "$" << stats.dailyAverage << "\n";
+    std::cout << std::left << std::setw(25) << "Weekly average:" << "$" << stats.weeklyAverage << "\n";
+    
+    if (stats.maxExpense > 0) {
+        std::cout << std::left << std::setw(25) << "Highest expense:" << stats.maxExpenseName << " ($" << stats.maxExpense << ")\n";
+    }
+    std::cout << "=================================\n";
 }

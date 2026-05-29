@@ -1,44 +1,32 @@
-# 💰 Personal Finance Manager
+# Personal Finance Manager in C++
 
-A robust, console-based Personal Finance Manager built in C++. This application allows users to track their daily expenditures, analyze spending habits, and persist data seamlessly using CSV files. 
+This is a console project I built during my first year of Computer Engineering at Nebrija University. The idea was to create a daily expense tracker to practice core C++ concepts like Object-Oriented Programming (OOP), memory management, and file reading/writing (I/O).
 
-Developed with a strong focus on clean architecture, memory safety, and object-oriented programming (OOP) principles.
+## Features
 
-## ✨ Features
+- **Full Management:** You can add, view, edit, and delete expenditures. Everything has strict validation.
+- **No lost data:** Everything you input saves automatically to a `data.csv` file. When you open the program again, it loads your entire history.
+- **Filters & Sorting:** You can sort expenses by date, amount, or type. You can also filter to see only a specific date range or a particular type of expense.
+- **Crash-proof:** It features `try-catch` blocks and keyboard buffer clearing. If the program asks for a number and you type a letter, it won't crash or go into an infinite loop; it warns you and lets you try again.
+- **Statistics:** It calculates how much you spent in total, shows daily/weekly averages, and tells you what your most expensive purchase of the month was.
 
-- **CRUD Operations:** Easily Add, View, Edit, and Remove expenditures with strict input validation.
-- **Data Persistence:** Automatically loads and saves data to `data.csv`, ensuring no information is lost between sessions.
-- **Advanced Sorting & Filtering:** - Sort records by Date, Amount, or Type (Ascending/Descending) using custom C++ lambdas.
-  - Filter expenditures by specific date ranges, amount thresholds, or categories.
-- **Financial Insights:** Calculate total spending, or break it down by specific months and years.
-- **Robust Error Handling:** Implements safe `std::cin` buffer clearing and `try-catch` blocks to prevent crashes (Segmentation Faults) or infinite loops from invalid user inputs.
+## Main Files
 
-## 📂 Project Structure
+- `main.cpp`: Handles the interactive menus and user input.
+- `manager.h / .cpp`: It handles the expenditure vector, sorting/searching algorithms, and the `.csv` file processing.
+- `expenditure.h / .cpp`: The class representing a single expense. It self-validates its own data before allowing an object to be created.
+- `makefile`: To compile everything quickly without typing long commands.
 
-- `main.cpp`: Handles the user interface with a mennu, input parsing, and buffer cleaning.
-- `manager.h / .cpp`: Core business logic, vector management, sorting algorithms, and CSV file I/O operations.
-- `expenditure.h / .cpp`: The data model representing a single transaction, including strict format validation (e.g., leap year date formats, positive amounts).
-- `makefile`: Automated build script for easy compilation.
+## How to test it
 
-## 🚀 How to Run
+If you have a C++ compiler (like `g++`) and `make` installed, just open your terminal in the project folder and run:
 
-### Prerequisites
-- A C++ compiler (e.g., `g++`)
-- `make` utility
+```bash
+make
+./exp
 
-### Compilation & Execution
-1. Clone the repository and navigate to the project folder in your terminal.
-2. Build the project using the makefile:
-    ```bash
-    make
-3. Run the compiled executable:
-    ```bash
-    ./exp
+## Recent Updates
 
-🗺️ Roadmap (Future Improvements)
+[x] Table formatting: Used std::setw so the console displays expenses neatly aligned in columns.
 
-    [ ] Enhanced UI Formatting: Implement advanced tabular formatting (using std::setw and std::left from <iomanip>) to display expenditures in a perfectly aligned, clean console grid.
-
-    [ ] Statistical Analysis: Add analytical modules to calculate weekly and monthly spending averages, providing users with deeper insights into their financial trends.
-
-Developed as a first-year Computer Engineering project in Nebrija University (Madrid, Spain), trying to demonstrate proficiency in C++ data structures, exception handling, and file streams.
+[x] Statistical Analysis: Added daily/weekly averages and key monthly metrics.

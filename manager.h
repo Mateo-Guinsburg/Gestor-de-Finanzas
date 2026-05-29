@@ -5,7 +5,15 @@
 #include <memory>
 #include "expenditure.h"
 
-class Manager {
+struct MonthlyStats{
+    double totalSpent;
+    double dailyAverage;
+    double weeklyAverage;
+    double maxExpense;
+    std::string maxExpenseName;
+};
+
+class Manager{
 private:
     std::vector<Expenditure> list;
 public:
@@ -29,6 +37,7 @@ public:
     void filterByAmount(double min, double max);
     void saveToFile(const std::string& filename) const;
     void loadFromFile(const std::string& filename);
+    MonthlyStats getMonthlyStats(int month, int year) const;
 };
 
 #endif

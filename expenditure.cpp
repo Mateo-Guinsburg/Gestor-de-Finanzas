@@ -44,6 +44,19 @@ std::string Expenditure::nowDate(){
     return std::string(date);
 }
 
+std::string Expenditure::formatDate(const std::string &rawDate) {
+    std::istringstream iss(rawDate);
+    int day, month, year;
+    char sep1, sep2;
+    iss >> day >> sep1 >> month >> sep2 >> year;
+    
+    std::ostringstream oss;
+    oss << std::setfill('0') << std::setw(2) << day << "/"
+        << std::setfill('0') << std::setw(2) << month << "/"
+        << year;
+    return oss.str();
+}
+
 void Expenditure::setName(const std::string &name) {
     if (validate_name(name)) {
         this->name = name;
@@ -60,7 +73,7 @@ void Expenditure::setType(const std::string &type) {
 }
 void Expenditure::setDate(const std::string &date) {
     if (validate_date(date)) {
-        this->date = date;
+        this->date = formatDate(date);
     } else {
         throw std::invalid_argument("Invalid date: must be in DD/MM/YYYY format.");
     }
